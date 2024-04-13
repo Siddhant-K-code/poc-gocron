@@ -1,0 +1,17 @@
+- name: fs-backup
+  # every day at 12:00
+  schedule: "0 12 * * *"
+  script:
+    - cd ${TEMP_DIR}
+    - mysqldump -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -h ${MYSQL_HOST} fs > result.sql
+    - tar -czf fs.tar.gz result.sql
+  filepath_to_upload: ${TEMP_DIR}/nextcloud.tar.gz
+  # you would get a file like that : 2024_04_13_18_05_03_01-fs-backup-p0sdz0u3.gz in s3
+
+- name: profile-backup
+  schedule: "0 12 * * *"
+  script:
+    - cd ${TEMP_DIR}
+    - mysqldump -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -h ${MYSQL_HOST} profile > result.sql
+    - tar -czf profile.tar.gz result.sql
+  filepath_to_upload: ${TEMP_DIR}/profile.tar.gz
